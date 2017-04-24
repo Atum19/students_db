@@ -1,0 +1,69 @@
+{% extends "students/base.html" %}
+
+{% load bootstrap3 %}
+
+{% block meta_title %}Список Груп{% endblock meta_title %}
+
+{% block title %}Список Груп{% endblock title %}
+
+{% block content %}
+
+<!-- Add Student Button -->
+{% buttons %}
+<a class="btn btn-primary" href="{% url 'groups_add' %}">Додати Групу</a>
+{% endbuttons %}
+
+<!-- Start Groups Listing -->
+{% if groups %}
+<table class="table">
+	{% with order_by=request.GET.order_by reverse=request.GET.reverse %}
+  <thead>
+	<tr>
+	  <th><a href="#">#</a></th>
+	  <th><a href="{% url 'groups' %}?order_by=title{% if order_by == 'title' and reverse != '1' %}&amp;reverse=1{% endif %}">
+		  Назва
+		  {% if order_by == 'title' and reverse != '1' %} &uarr;
+		  {% elif order_by == 'title' and reverse == '1' %} &darr;
+		  {% endif %}
+	  </a></th>
+	  <th><a href="#">Староста</a></th>
+	  <th>Дії</th>
+	</tr>
+  </thead>
+	{% endwith %}
+
+  <tbody>
+	{% for group in groups %}
+	<tr>
+		<td>{{ forloop.counter }}</td>
+		<td><a href="{% url 'groups_edit' group.id %}"> {{ group.title }}</td>
+		<td><a href="{% url 'students_edit' group.leader.id %}"> {{ group.leader }}</td>
+	<td>
+
+    {% buttons %}
+	<div class="btn-group">
+	  <button type="button" class="btn btn-default dropdown-toggle"
+			  data-toggle="dropdown">Дія
+		<span class="caret"></span>
+	  </button>
+
+	  <ul class="dropdown-menu" role="menu">
+		<li><a href="{% url 'groups_edit' group.id %}"> Редагувати</a></li>
+		<li><a href="{% url 'groups_delete' group.id %}"> Видалити</a></li>
+	  </ul>
+
+	</div>
+    {% endbuttons %}
+
+	</td>
+	</tr>
+	{% endfor %}
+
+  </tbody>
+</table>
+<!-- End Groups Listing -->
+{% endif %}
+
+{% include 'students/pagination.html' %}
+
+{% endblock content %}

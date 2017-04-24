@@ -1,0 +1,73 @@
+{% extends "students/base.html" %}
+
+{% load bootstrap3 %}
+
+{% block meta_title %}Графік Екзаменів{% endblock meta_title %}
+
+{% block title %}Графік Екзаменів{% endblock title %}
+
+{% block content %}
+
+<!-- Add Student Button -->
+{% buttons %}
+<a class="btn btn-primary" href="{% url 'exams_add' %}">Додати Екзамен</a>
+{% endbuttons %}
+
+<!-- Start Groups Listing -->
+{% if exams %}
+<table class="table">
+	{% with order_by=request.GET.order_by reverse=request.GET.reverse %}
+  <thead>
+	<tr>
+	  <th><a href="#">#</a></th>
+	  <th><a href="#">Предмет</a></th>
+	  <th><a href="#">Дата і час проведення</a></th>
+	  <th><a href="#">Викладач</a></th>
+	  <th><a href="#">Група</a></th>
+	  <th>Дії</th>
+	</tr>
+  </thead>
+	{% endwith %}
+
+  <tbody>
+    {% for exam in exams %}
+
+	<tr>
+		<td>{{ forloop.counter }}</td>
+		<td><a href='{% url "exams_edit" exam.id %}'> {{ exam.name }}</td>
+		<td><a href='{% url "exams_edit" exam.id %}'> {{ exam.data_exam }}</td>
+		<td><a href='{% url "exams_edit" exam.id %}'> {{ exam.professor }}</td>
+		<td><a href='{% url "exams_edit" exam.id %}'>
+            {% for tag in exam.exam_group.all %}
+                {{ tag.title }}
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </td>
+	<td>
+
+    {% buttons %}
+	<div class="btn-group">
+	  <button type="button" class="btn btn-default dropdown-toggle"
+			  data-toggle="dropdown">Дія
+		<span class="caret"></span>
+	  </button>
+	  <ul class="dropdown-menu" role="menu">
+		<li><a href='{% url "exams_edit" exam.id %}'> Редагувати</a></li>
+		<li><a href='{% url "exams_delete" exam.id %}'> Видалити</a></li>
+	  </ul>
+
+	</div>
+    {% endbuttons %}
+
+	</td>
+	</tr>
+	{% endfor %}
+
+  </tbody>
+</table>
+<!-- End Groups Listing -->
+{% endif %}
+
+{% include 'students/pagination.html' %}
+
+{% endblock content %}
