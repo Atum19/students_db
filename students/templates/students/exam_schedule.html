@@ -15,7 +15,7 @@
 
 <!-- Start Groups Listing -->
 {% if exams %}
-<table class="table">
+<table class="table table-hover table-striped">
 	{% with order_by=request.GET.order_by reverse=request.GET.reverse %}
   <thead>
 	<tr>
@@ -34,15 +34,15 @@
 
 	<tr>
 		<td>{{ forloop.counter }}</td>
-		<td><a href='{% url "exams_edit" exam.id %}'> {{ exam.name }}</td>
-		<td><a href='{% url "exams_edit" exam.id %}'> {{ exam.data_exam }}</td>
-		<td><a href='{% url "exams_edit" exam.id %}'> {{ exam.professor }}</td>
+		<td><a href='{% url "exams_edit" exam.id %}'> {{ exam.name }} </a></td>
+		<td><a href='{% url "exams_edit" exam.id %}'> {{ exam.data_exam }} </a></td>
+		<td><a href='{% url "exams_edit" exam.id %}'> {{ exam.professor }} </a></td>
 		<td><a href='{% url "exams_edit" exam.id %}'>
             {% for tag in exam.exam_group.all %}
                 {{ tag.title }}
                 {% if not forloop.last %}, {% endif %}
             {% endfor %}
-        </td>
+        </a></td>
 	<td>
 
     {% buttons %}
@@ -68,6 +68,8 @@
 <!-- End Groups Listing -->
 {% endif %}
 
-{% include 'students/pagination.html' %}
+{% with object_list=exams %}
+  {% include "students/pagination.html" %}
+{% endwith %}
 
 {% endblock content %}

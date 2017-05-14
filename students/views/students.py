@@ -24,34 +24,48 @@ from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Button, 
 
 from ..models.groups import Group
 from ..models.students import Student
+from ..util import paginate, get_current_group
 
 
 # Views for Students
 def students_list(request):
-	students = Student.objects.all()
+    # students = Student.objects.all()
 
-	# try to order students list
-	order_by = request.GET.get('order_by', '')
-	if order_by in ('last_name', 'first_name', 'ticket'):
-		students = students.order_by(order_by)
-		if request.GET.get('reverse', '') == '1':
-			students = students.reverse()
+    # check if we need to show only one group of students
+    current_group = get_current_group(request)
+    if current_group:
+        students = Student.objects.filter(student_group=current_group)
+    else:
+        # otherwise show all students
+        students = Student.objects.all()  # try to order students list
 
-	# paginate students
-	paginator = Paginator(students, 3)
-	page = request.GET.get('page')
-	try:
-		students = paginator.page(page)
-	except PageNotAnInteger:
-		# If page is not an integer, deliver first page.
-		students = paginator.page(1)
-	except EmptyPage:
-		# If page is out of range (e.g. 9999), deliver
-		# last page of results.
-		students = paginator.page(paginator.num_pages)
+    order_by = request.GET.get('order_by', '')
+    if order_by in ('last_name', 'first_name', 'ticket'):
+        students = students.order_by(order_by)
+        if request.GET.get('reverse', '') == '1':
+            students = students.reverse()
+    else:
+        order_by = 'last_name'
+        students = students.order_by(order_by)
 
-	return render(request, 'students/students_list.html',
-                  {'students': students})
+    # paginate students
+    # paginator = Paginator(students, 3)
+    # page = request.GET.get('page')
+    # try:
+    # 	students = paginator.page(page)
+    # except PageNotAnInteger:
+    # 	# If page is not an integer, deliver first page.
+    # 	students = paginator.page(1)
+    # except EmptyPage:
+    # 	# If page is out of range (e.g. 9999), deliver
+    # 	# last page of results.
+    # 	students = paginator.page(paginator.num_pages)
+
+    context = paginate(students, 5, request, {}, var_name='students')
+    return render(request, 'students/students_list.html', context)
+
+    # return render(request, 'students/students_list.html',
+    #              {'students': students})
 
 
 ##########################################################################
@@ -127,7 +141,7 @@ class StudentAddView(FormView):
 
         if request.POST.get('cancel_button'):
             return HttpResponseRedirect(
-                u'%s?status_message=Редагування студента відмінено!' % reverse('home'))
+                u'%s?status_message=Додавання студента відмінено!' % reverse('home'))
 
         if form.is_valid():
             return self.form_valid(form)
