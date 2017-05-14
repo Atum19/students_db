@@ -10,7 +10,7 @@ DATABASES = {
         'NAME': 'django_studs_db',
         'USER': 'django',
         'PASSWORD': 'django0',
-        'HOST': '',
+        'HOST': '127.0.0.1',
         'PORT': '',
     }
 }

@@ -79,6 +79,7 @@ TEMPLATES = [
                 'studentsdb.context_processors.students_proc',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'students.context_processors.groups_processor',
             ],
         },
     },

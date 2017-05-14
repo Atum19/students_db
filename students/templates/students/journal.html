@@ -2,6 +2,8 @@
 
 {% load static from staticfiles %}
 
+{% load i18n %}
+
 {% load bootstrap3 %}
 
 {% block meta_title %}Облік Відвідування{% endblock meta_title %}
@@ -20,18 +22,17 @@
 {% else %}
 
 <div class="alert alert-warning">
-    Зміни в журнал зберігаються автоматично при кожному кліку в клітинці
-    таблиці.
+    Зміни в журнал зберігаються автоматично при кожному кліку в клітинці таблиці.
     <span id="ajax-progress-indicator">Йде збереження...</span>
 </div>
 
 <p id="journal-nav" class="text-center">
   <a href="?month={{ prev_month }}"
      title="Попередній Місяць">&larr;</a>
+
   <!-- TODO: translate month name -->
   <strong>{{ month_verbose }} {{ year }}</strong>
-  <a href="?month={{ next_month }}"
-     title="Наступний Місяць">&rarr;</a>
+  <a href="?month={{ next_month }}" title="Наступний Місяць">&rarr;</a>
 </p>
 
 <table class="table table-hover table-striped table-bordered"
@@ -61,7 +62,7 @@
 
       <td>
         {% if is_paginated %}
-          {{ page_obj.start_index|add:forloop.counter0 }}
+          {{ page_obj.start_index|add:forloop.counter|add:"-1" }}
         {% else %}
           {{ forloop.counter }}
         {% endif %}
@@ -78,7 +79,7 @@
       <td class="day-box">
         <input type="checkbox" data-student-id="{{ student.id }}"
                data-date="{{ day.date }}" data-url="{{ student.update_url }}"
-               value="1"{% if day.present %} checked="checked" {% endif %} />
+               value="1" {% if day.present %}checked="checked"{% endif %}>
       </td>
       {% endfor %}
 
