@@ -2,6 +2,8 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 import debug_toolbar   # add this
+from django.contrib.auth import views as auth_views
+from django.views.generic.base import RedirectView, TemplateView
 
 from views import students, groups, exams, contact_admin, journal
 # from students import views
@@ -34,6 +36,11 @@ urlpatterns = [
     # Journal urls
     # url(r'^journal/$', journal.JournalView.as_view(), name='journal'),
     url(r'^journal/(?P<pk>\d+)?/?$', journal.JournalView.as_view(), name='journal'),
+
+    # User Related urls
+    url(r'^users/logout/$', auth_views.logout, kwargs={'next_page': 'home'}, name='auth_logout'),
+    url(r'^register/complete/$', RedirectView.as_view(pattern_name=' home'), name='registration_complete'),
+    url(r'^users/', include('registration.backends.simple.urls', namespace='users')),
 
     # Contact Admin Form
     # url(r'^contact-admin/$', contact_admin.contact_admin, name='contact_admin'),

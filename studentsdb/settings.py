@@ -15,6 +15,9 @@ from django.conf import global_settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+PORTAL_URL = 'http://localhost:8000'
 
 # email settings
 # please, set here you smtp server details and your admin email
@@ -38,9 +41,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+# django-registration app: users can register
+REGISTRATION_OPEN = True
+LOGIN_URL = 'users:auth_login'
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -52,6 +59,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'bootstrap3',
     'students',
+    'studentsdb',
+    'registration',
 ]
 
 MIDDLEWARE = [
@@ -60,6 +69,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -88,6 +98,7 @@ TEMPLATES = [
 BOOTSTRAP3 = {'include_jquery': True}
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 WSGI_APPLICATION = 'studentsdb.wsgi.application'
+REGISTRATION_OPEN = True
 
 
 # Database
@@ -139,6 +150,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-PORTAL_URL = 'http://localhost:8000'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
+TEMPLATE_DIRS = (
+   os.path.join(BASE_DIR, 'studentsdb', 'templates'),
+)
